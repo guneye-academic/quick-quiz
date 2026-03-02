@@ -1,38 +1,37 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Typography, Button, TextField, Box, Paper } from '@mui/material';
 import { useRouter, useParams } from 'next/navigation';
 import io from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
-
-let socket;
 
 const JoinQuiz = () => {
   const [name, setName] = useState('');
   const router = useRouter();
   const params = useParams();
   const { quizId } = params;
+  const socket = useRef(null);
 
   useEffect(() => {
     socketInitializer();
     return () => {
-      if (socket) socket.disconnect();
+      if (socket.current) socket.current.disconnect();
     };
   }, []);
 
   const socketInitializer = async () => {
     await fetch('/api/socket');
-    socket = io();
+    socket.current = io();
 
-    socket.on('connect', () => {
+    socket.current.on('connect', () => {
       console.log('connected');
     });
   };
 
   const handleJoinQuiz = () => {
     const studentId = uuidv4();
-    socket.emit('join-quiz', { quizId, studentId, name });
+    socket.current.emit('join-quiz', { quizId, studentId, name });
     router.push(`/quiz/${quizId}/${studentId}`);
   };
 

@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Typography, Button, TextField, Box, Paper, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import io from 'socket.io-client';
 import { useRouter, useParams } from 'next/navigation';
 import Header from '../../../../components/Header';
-
-let socket;
 
 const EditQuizPage = () => {
   const [quizTitle, setQuizTitle] = useState('');
@@ -14,6 +12,7 @@ const EditQuizPage = () => {
   const router = useRouter();
   const params = useParams();
   const { quizId } = params;
+  const socket = useRef(null);
 
   useEffect(() => {
     fetch(`/api/quizzes`, { cache: 'no-store' })
@@ -28,19 +27,19 @@ const EditQuizPage = () => {
 
     socketInitializer();
     return () => {
-      if (socket) socket.disconnect();
+      if (socket.current) socket.current.disconnect();
     };
   }, [quizId]);
 
   const socketInitializer = async () => {
     await fetch('/api/socket');
-    socket = io();
+    socket.current = io();
 
-    socket.on('connect', () => {
+    socket.current.on('connect', () => {
       console.log('connected');
     });
 
-    socket.on('quiz-updated', () => {
+    socket.current.on('quiz-updated', () => {
       router.push('/admin/quizzes');
     });
   };
@@ -63,7 +62,7 @@ const EditQuizPage = () => {
 
   const handleSaveChanges = () => {
     const quizData = { id: quizId, title: quizTitle, questions };
-    socket.emit('update-quiz', quizData);
+    socket.current.emit('update-quiz', quizData);
   };
 
   return (

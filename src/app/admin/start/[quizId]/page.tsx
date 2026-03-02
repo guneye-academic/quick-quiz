@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Typography, Button, Box, Paper, List, ListItem, ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useParams } from 'next/navigation';
 import io from 'socket.io-client';
 import QRCode from 'react-qr-code';
 import Header from '../../../../components/Header';
-
-let socket;
 
 const StartQuizPage = () => {
   const [quiz, setQuiz] = useState(null);
@@ -20,6 +18,7 @@ const StartQuizPage = () => {
   const [responseStatus, setResponseStatus] = useState({ respondedCount: 0, totalParticipants: 0 });
   const params = useParams();
   const { quizId } = params;
+  const socket = useRef(null);
 
   useEffect(() => {
     setOrigin(window.location.origin);
@@ -33,50 +32,50 @@ const StartQuizPage = () => {
 
     socketInitializer();
     return () => {
-      if (socket) socket.disconnect();
+      if (socket.current) socket.current.disconnect();
     };
   }, [quizId]);
 
   const socketInitializer = async () => {
     await fetch('/api/socket');
-    socket = io();
+    socket.current = io();
 
-    socket.on('connect', () => {
+    socket.current.on('connect', () => {
       console.log('connected');
     });
 
-    socket.on('quiz-started', () => {
+    socket.current.on('quiz-started', () => {
       setQuizStarted(true);
     });
 
-    socket.on('update-participants', (newParticipants) => {
+    socket.current.on('update-participants', (newParticipants) => {
       setParticipants(newParticipants);
     });
 
-    socket.on('results-update', (newResults) => {
+    socket.current.on('results-update', (newResults) => {
       setResults(newResults);
       setShowResults(true);
     });
 
-    socket.on('question-is-active', ({ questionIndex }) => {
+    socket.current.on('question-is-active', ({ questionIndex }) => {
       setActiveQuestionIndex(questionIndex);
     });
 
-    socket.on('response-status-update', (status) => {
+    socket.current.on('response-status-update', (status) => {
       setResponseStatus(status);
     });
   };
 
   const handleStartQuiz = () => {
-    socket.emit('start-quiz', { quizId });
+    socket.current.emit('start-quiz', { quizId });
   };
 
   const handleActivateQuestion = (questionIndex) => {
-    socket.emit('activate-question', { quizId, questionIndex });
+    socket.current.emit('activate-question', { quizId, questionIndex });
   };
 
   const handleShowResults = () => {
-    socket.emit('show-results', { quizId });
+    socket.current.emit('show-results', { quizId });
   };
 
   if (!quiz) {

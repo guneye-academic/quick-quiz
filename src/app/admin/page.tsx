@@ -1,34 +1,33 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Container, Typography, Button, TextField, Box, Paper, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import io from 'socket.io-client';
 import { useRouter } from 'next/navigation';
 import Header from '../../components/Header';
 
-let socket;
-
 const Admin = () => {
   const [quizTitle, setQuizTitle] = React.useState('');
   const [questions, setQuestions] = React.useState([{ text: '', options: ['', '', '', ''], correctAnswer: '' }]);
   const router = useRouter();
+  const socket = useRef(null);
 
   React.useEffect(() => {
     socketInitializer();
     return () => {
-      if (socket) socket.disconnect();
+      if (socket.current) socket.current.disconnect();
     };
   }, []);
 
   const socketInitializer = async () => {
     await fetch('/api/socket');
-    socket = io();
+    socket.current = io();
 
-    socket.on('connect', () => {
+    socket.current.on('connect', () => {
       console.log('connected');
     });
 
-    socket.on('quiz-created', () => {
+    socket.current.on('quiz-created', () => {
       router.push('/admin/quizzes');
     });
   };
@@ -51,7 +50,7 @@ const Admin = () => {
 
   const handleSaveQuiz = () => {
     const quizData = { title: quizTitle, questions };
-    socket.emit('create-quiz', quizData);
+    socket.current.emit('create-quiz', quizData);
   };
 
   return (

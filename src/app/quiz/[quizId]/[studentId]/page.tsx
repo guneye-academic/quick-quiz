@@ -1,11 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Typography, Box, Paper, CircularProgress, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useParams } from 'next/navigation';
 import io from 'socket.io-client';
-
-let socket;
 
 const StudentQuizPage = () => {
   const [question, setQuestion] = useState(null);
@@ -15,6 +13,7 @@ const StudentQuizPage = () => {
   const [student, setStudent] = useState(null);
   const params = useParams();
   const { quizId, studentId } = params;
+  const socket = useRef(null);
 
   const [result, setResult] = useState(null);
 
@@ -28,26 +27,26 @@ const StudentQuizPage = () => {
         
     socketInitializer();
     return () => {
-      if (socket) socket.disconnect();
+      if (socket.current) socket.current.disconnect();
     };
   }, [quizId]);
 
   const socketInitializer = async () => {
     await fetch('/api/socket');
-    socket = io();
+    socket.current = io();
 
-    socket.on('connect', () => {
+    socket.current.on('connect', () => {
       console.log('connected');
-      socket.emit('join-quiz-page', { quizId, studentId });
+      socket.current.emit('join-quiz-page', { quizId, studentId });
     });
 
-    socket.on('question-activated', (activeQuestion) => {
+    socket.current.on('question-activated', (activeQuestion) => {
       setQuestion(activeQuestion);
       setWaiting(false);
       setQuizCompleted(false);
     });
 
-    socket.on('results-update', (results) => {
+    socket.current.on('results-update', (results) => {
       fetch(`/api/sessions/${quizId}`, { cache: 'no-store' })
         .then((res) => res.json())
         .then((session) => {
@@ -66,7 +65,7 @@ const StudentQuizPage = () => {
   };
 
   const handleAnswerSubmit = (answer) => {
-    socket.emit('submit-answer', {
+    socket.current.emit('submit-answer', {
       quizId,
       studentId,
       questionIndex: question.index,
