@@ -11,7 +11,7 @@ const EditQuizPage = () => {
   const [questions, setQuestions] = useState([{ text: '', options: ['', '', '', ''], correctAnswer: '' }]);
   const router = useRouter();
   const params = useParams();
-  const { quizId } = params;
+  const quizId = params.quizId as string;
   const socket = useRef(null);
 
   useEffect(() => {

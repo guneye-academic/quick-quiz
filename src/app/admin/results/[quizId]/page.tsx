@@ -9,7 +9,7 @@ import Header from '../../../../components/Header';
 const ResultsPage = () => {
   const [results, setResults] = useState([]);
   const params = useParams();
-  const { quizId } = params;
+  const quizId = params.quizId as string;
 
   useEffect(() => {
     if (quizId) {
