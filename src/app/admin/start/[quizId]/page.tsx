@@ -17,7 +17,7 @@ const StartQuizPage = () => {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(null);
   const [responseStatus, setResponseStatus] = useState({ respondedCount: 0, totalParticipants: 0 });
   const params = useParams();
-  const quizId = params.quizId as string;
+  const quizId = params?.quizId as string;
   const socket = useRef(null);
 
   useEffect(() => {

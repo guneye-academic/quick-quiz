@@ -12,8 +12,8 @@ const StudentQuizPage = () => {
   const [quiz, setQuiz] = useState(null);
   const [student, setStudent] = useState(null);
   const params = useParams();
-  const quizId = params.quizId as string;
-  const studentId = params.studentId as string;
+  const quizId = params?.quizId as string;
+  const studentId = params?.studentId as string;
   const socket = useRef(null);
 
   const [result, setResult] = useState(null);

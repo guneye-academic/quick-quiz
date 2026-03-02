@@ -10,7 +10,7 @@ const JoinQuiz = () => {
   const [name, setName] = useState('');
   const router = useRouter();
   const params = useParams();
-  const quizId = params.quizId as string;
+  const quizId = params?.quizId as string;
   const socket = useRef(null);
 
   useEffect(() => {
