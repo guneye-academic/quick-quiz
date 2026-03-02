@@ -1,0 +1,119 @@
+{
+  "quizzes": [
+    {
+      "id": "6dd2b9b8-6bc7-4720-a8dc-57d62be06e4a",
+      "title": "Quiz-1",
+      "questions": [
+        {
+          "text": "Q1",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "text": "Q2",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctAnswer": 4
+        }
+      ]
+    },
+    {
+      "id": "0e1786a3-32ee-4dbe-b589-3aa6a33237dd",
+      "title": "Quiz-2",
+      "questions": [
+        {
+          "text": "Q11",
+          "options": [
+            "aaa",
+            "bbb",
+            "ccc",
+            "ddd"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "text": "Q2",
+          "options": [
+            "aaaa",
+            "bbbb",
+            "cccc",
+            "dddd"
+          ],
+          "correctAnswer": 1
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "0b266813-66d3-49ea-89e4-4ed4aee7b914",
+      "quizId": "6dd2b9b8-6bc7-4720-a8dc-57d62be06e4a",
+      "participants": [
+        {
+          "id": "d0de8efa-7437-4c05-b7a0-77ab52439a80",
+          "name": "asd",
+          "answers": [
+            {
+              "questionIndex": 0,
+              "answer": "A",
+              "isCorrect": true,
+              "responseTime": 2441
+            },
+            {
+              "questionIndex": 1,
+              "answer": "c",
+              "isCorrect": false,
+              "responseTime": 2992
+            }
+          ]
+        },
+        {
+          "id": "7487d202-8139-40ab-9138-6a587c7453f3",
+          "name": "asd2",
+          "answers": [
+            {
+              "questionIndex": 0,
+              "answer": "A",
+              "isCorrect": true,
+              "responseTime": 2983
+            },
+            {
+              "questionIndex": 1,
+              "answer": "a",
+              "isCorrect": false,
+              "responseTime": 2719
+            }
+          ]
+        }
+      ],
+      "activeQuestion": {
+        "index": 1,
+        "text": "Q2",
+        "options": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "activationTime": 1772462171203
+      },
+      "started": true
+    },
+    {
+      "id": "ea8e1cda-5be0-4c11-9873-d26163258631",
+      "quizId": "0e1786a3-32ee-4dbe-b589-3aa6a33237dd",
+      "participants": [],
+      "activeQuestion": null,
+      "started": false
+    }
+  ]
+}
